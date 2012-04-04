@@ -1,6 +1,26 @@
 \name{NEWS}
 \title{NEWS file for the svDialogs package}
 
+\section{Changes in version 0.9-52}{
+	\itemize{
+    \item{ \code{menuXXX()} functions do not generate files in
+			\preformatted{tmp} dir on Linux, unless in \code{interactive()} session,
+			and with explicit user's acknowledgement. Moreover, the user name is not
+			used anymore as part of the name of the temporary files generated (cf CRAN
+			policies and following B. Ripley's request). }
+	
+		\item{ Code to manage \code{menuXXX()} items on Mac OS X is considered
+			still experimental (on R-forge, not CRAN) and is now commented out. Will
+			be further developed in a future version of the \pkg{svDialogs} package. }
+	}
+}
+
+\section{Changes in version 0.9-51}{
+	\itemize{
+    \item{ NEWS file reworked to use the new Rd format. }
+	}
+}
+
 \section{Changes in version 0.9-50}{
 	\itemize{
     \item{ Slight changes in flexible dialog functions according to notes
@@ -95,7 +115,7 @@
 	
     \item{ \code{dlgMessage()} is reworked into native dialog box, but it looses
 			a couple of options during the process (title, icon, parent). The previous
-			code is now moved to \pkg{svDialogs.tcltk}. }
+			code is now moved to \pkg{svDialogstcltk}. }
 			
 		\item{ \code{dlgInput()} is reworked the same way, and it looses the
 			\code{'parent'} argument that was not implemented yet, anyway, and the

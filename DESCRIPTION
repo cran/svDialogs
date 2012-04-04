@@ -1,7 +1,7 @@
 Package: svDialogs
 Type: Package
-Version: 0.9-50
-Date: 2012-03-31
+Version: 0.9-52
+Date: 2012-04-04
 Title: SciViews GUI API - Dialog boxes
 Authors@R: c(person("Philippe", "Grosjean", role = c("aut", "cre"),
         email = "phgrosjean@sciviews.org"))
@@ -14,6 +14,6 @@ Description: Rapidly construct dialog boxes for your GUI, including an
 License: GPL-2
 URL: http://www.sciviews.org/SciViews-R
 BugReports: https://r-forge.r-project.org/tracker/?group_id=194
-Packaged: 2012-03-31 08:30:52 UTC; phgrosjean
+Packaged: 2012-04-04 16:49:51 UTC; phgrosjean
 Repository: CRAN
-Date/Publication: 2012-04-02 17:47:27
+Date/Publication: 2012-04-04 18:49:19
