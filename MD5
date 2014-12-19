@@ -1,13 +1,13 @@
-2e4a06170f43c025ed1446717882cbc7 *DESCRIPTION
+dafc973660c0b8fca00dac0313c8b050 *DESCRIPTION
 ee31e509823678203db333b9b3872252 *NAMESPACE
-ee89fd7a45f86748262f22c6f01e6938 *NEWS
-a3baac3c464bda08505369da026c28bc *R/dlgDir.R
+4ab62c1c29ec9b69ef6d4df973fb5393 *NEWS
+30f21333cece45fe0b3732fc741a352d *R/dlgDir.R
 c0670f1c405e70b148aa0dc0f4a7bed2 *R/dlgForm.R
-0ceb54f1728c7dd326a28d3dec72e08d *R/dlgInput.R
+3f0c2afc0351c701a0c7e849af081227 *R/dlgInput.R
 1fc2a5d4cd9049af4ca3727a27f1e8f4 *R/dlgList.R
-ad3f5d04020f19b9e3eeb7019c123af7 *R/dlgMessage.R
-43821494f56602543fa0700283907824 *R/dlgOpen.R
-2d05807d6fdd7439b831983601c0ea52 *R/dlgSave.R
+d8f7884b4b0efa074b7cd509fc3eb142 *R/dlgMessage.R
+108e3eb9e3677519335697e96a8ecf9c *R/dlgOpen.R
+d94d6fafa5986e42cfadaaee371b477c *R/dlgSave.R
 4114220068677824cd4a7567f9668154 *R/flexibleDlg.R
 3a4120a78b15f9bcc63942d2489a89b1 *R/guiDlg.R
 be9918ab342a0c3cf7c59252c396f341 *R/guiSetStyle.tcltk.R
@@ -15,7 +15,7 @@ be9918ab342a0c3cf7c59252c396f341 *R/guiSetStyle.tcltk.R
 cb864e9c193926259100a067fbcb2f98 *R/svDialogs-internal.R
 28e8b360b13d462f26d224a113cc5233 *TODO
 9ad96b84f192f7f1987dd3b5d6c9270e *inst/CITATION
-7917b1026a9a3a109361c20b16a12534 *inst/NEWS.Rd
+fba873d8bf74237a9d5c92a05cf08b2a *inst/NEWS.Rd
 9eb4aad303e0d7b8db8b66f9040d7243 *inst/gui/RCtxMenuLinux.txt
 ad3f244eb369d29a5d98f8b97da3d7cf *inst/gui/RMenuLinux.txt
 21b7fc29fe51225ea2f811b7981dea45 *man/dlgDir.Rd
@@ -26,4 +26,4 @@ d27bffb7454d1de6f777b650a660ebcd *man/dlgList.Rd
 b78fee046d470331de6ad7ac86c75b57 *man/dlgOpen.Rd
 2b64950e1cba7d30c98f8d1d2970c563 *man/dlgSave.Rd
 1b81a41e2bacb391505d8c8616590eec *man/menu.Rd
-8a8cbd360f2a2ae0a889bb2f3000f05a *man/svDialogs-package.Rd
+149e2103ef2e887249026c4bdc031453 *man/svDialogs-package.Rd
