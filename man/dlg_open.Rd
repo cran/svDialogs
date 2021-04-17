@@ -10,29 +10,64 @@
 \alias{dlgOpen.textCLI}
 \alias{dlgOpen.nativeGUI}
 \title{Modal dialog to select a file.}
-\format{An object of class \code{matrix} with 11 rows and 2 columns.}
-\usage{
-dlg_open(default, title, multiple = FALSE, filters = dlg_filters["All", ],
-  ..., gui = .GUI)
+\format{
+An object of class \code{matrix} with 11 rows and 2 columns.
 
-dlgOpen(default, title, multiple = FALSE, filters = dlg_filters["All", ],
-  ..., gui = .GUI)
+An object of class \code{matrix} with 11 rows and 2 columns.
+}
+\usage{
+dlg_open(
+  default,
+  title,
+  multiple = FALSE,
+  filters = dlg_filters["All", ],
+  ...,
+  gui = .GUI
+)
+
+dlgOpen(
+  default,
+  title,
+  multiple = FALSE,
+  filters = dlg_filters["All", ],
+  ...,
+  gui = .GUI
+)
 
 dlg_filters
 
 dlgFilters
 
-\method{dlgOpen}{gui}(default, title, multiple = FALSE,
-  filters = dlg_filters["All", ], ..., gui = .GUI)
+\method{dlgOpen}{gui}(
+  default,
+  title,
+  multiple = FALSE,
+  filters = dlg_filters["All", ],
+  ...,
+  gui = .GUI
+)
 
-\method{dlgOpen}{textCLI}(default, title, multiple = FALSE,
-  filters = dlg_filters["All", ], ..., gui = .GUI)
+\method{dlgOpen}{textCLI}(
+  default,
+  title,
+  multiple = FALSE,
+  filters = dlg_filters["All", ],
+  ...,
+  gui = .GUI
+)
 
-\method{dlgOpen}{nativeGUI}(default, title, multiple = FALSE,
-  filters = dlg_filters["All", ], ..., gui = .GUI)
+\method{dlgOpen}{nativeGUI}(
+  default,
+  title,
+  multiple = FALSE,
+  filters = dlg_filters["All", ],
+  rstudio = getOption("svDialogs.rstudio", TRUE),
+  ...,
+  gui = .GUI
+)
 }
 \arguments{
-\item{default}{The default file to start with (use \code{/dir/*} or \code{/dir/*.*} to
+\item{default}{The default file to start with (use \verb{/dir/*} or \verb{/dir/*.*} to
 start in a given directory).}
 
 \item{title}{A title to display on top of the dialog box.}
@@ -42,11 +77,16 @@ start in a given directory).}
 \item{filters}{A specification of file filters as a \code{nx2} matrix, or a
 character string with even number of items. First items is the label, second
 one is the filter. See \code{dlg_filters} for examples. This is currently ignored
-on MacOS, since such kind of filter is defined differently there.}
+on MacOS and RStudio, since such kind of filter is defined differently there.}
 
 \item{...}{Pass further arguments to methods.}
 
 \item{gui}{The 'gui' object concerned by this dialog box.}
+
+\item{rstudio}{Logical. Should 'RStudio' dialog boxes automatically be used
+if available? If \code{FALSE}, force using OS dialog boxes, but only in
+'RStudio Desktop' (ignored in 'RStudio Server'). Can be changed globally
+with \code{options(svDialogs.rstudio = TRUE|FALSE)}. \code{TRUE} by default.}
 }
 \value{
 The modified 'gui' object is returned invisibly. The chosen file(s),
@@ -57,12 +97,12 @@ or an empty string if the "cancel" button was clicked is found in \code{gui$res}
 Select an existing file, or create a new one.
 }
 \note{
-On RStudio, \code{multiple = TRUE} cannot be honored. So, for now, you can
-only select one file there. Also, the textual version is painful to indicate
+On 'RStudio Server', \code{multiple = TRUE} cannot be honored for now. So,
+you can only select one file there, and a warning is issued to remind you
+that. On 'RStudio Desktop', the OS-native dialog box is used instead in case
+of \code{multiple = TRUE}. Also, the textual version is painful to indicate
 the full path of several files. So, it should use globbing, and/or indication
 of a path followed by a selection in a list (to be done in further versions).
-Finally, the 'RStudio' version of this dialog box currently ignores the
-\code{filters =} argument.
 }
 \examples{
 \dontrun{
@@ -75,8 +115,6 @@ dlg_open(multiple = TRUE)$res
 \seealso{
 \code{\link[=dlg_save]{dlg_save()}}, \code{\link[=dlg_dir]{dlg_dir()}}
 }
-\concept{
-Modal dialog box
-}
+\concept{Modal dialog box}
 \keyword{datasets}
 \keyword{misc}

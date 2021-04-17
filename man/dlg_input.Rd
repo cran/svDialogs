@@ -12,17 +12,20 @@ dlg_input(message = "Enter a value", default = "", ..., gui = .GUI)
 
 dlgInput(message = "Enter a value", default = "", ..., gui = .GUI)
 
-\method{dlgInput}{gui}(message = "Enter a value", default = "", ...,
-  gui = .GUI)
+\method{dlgInput}{gui}(message = "Enter a value", default = "", ..., gui = .GUI)
 
-\method{dlgInput}{textCLI}(message = "Enter a value", default = "", ...,
-  gui = .GUI)
+\method{dlgInput}{textCLI}(message = "Enter a value", default = "", ..., gui = .GUI)
 
-\method{dlgInput}{nativeGUI}(message = "Enter a value", default = "", ...,
-  gui = .GUI)
+\method{dlgInput}{nativeGUI}(
+  message = "Enter a value",
+  default = "",
+  rstudio = getOption("svDialogs.rstudio", TRUE),
+  ...,
+  gui = .GUI
+)
 }
 \arguments{
-\item{message}{The message to display in the dialog box. Use \code{\\n} for
+\item{message}{The message to display in the dialog box. Use \verb{\\\\n} for
 line break, or provide a vector of character strings, one for each line.}
 
 \item{default}{The default value in the text box. Single string or \code{NULL}.}
@@ -30,6 +33,11 @@ line break, or provide a vector of character strings, one for each line.}
 \item{...}{Pass further arguments to methods.}
 
 \item{gui}{The 'gui' object concerned by this dialog box.}
+
+\item{rstudio}{Logical. Should 'RStudio' dialog boxes automatically be used
+if available? If \code{FALSE}, force using OS dialog boxes, but only in
+'RStudio Desktop' (ignored in 'RStudio Server'). Can be changed globally
+with \code{options(svDialogs.rstudio = TRUE|FALSE)}. \code{TRUE} by default.}
 }
 \value{
 The modified 'gui' object is returned invisibly. The text entered by
@@ -43,7 +51,7 @@ Prompt for some data in a modal dialog box.
 The 'RStudio' version of this dialog box does not allow for an empty
 string. So, for better portability, try never to expect an empty string from
 the user (the \code{'Cancel'} button is there to dismiss the dialog box).
-On MacOS, single and double quotes are temporarilly replaced by their slanted
+On MacOS, single and double quotes are temporarily replaced by their slanted
 versions (unicode characters u3032 and u2033, respectively) because the
 command that triggers the dialog box does not allow quotes inside strings.
 Regular quotes are reset on the output. This is the only hack we found that
@@ -54,16 +62,14 @@ was working. Better solutions are welcome!
 # Ask something...
 user <- dlg_input("Who are you?", Sys.info()["user"])$res
 if (!length(user)) {# The user clicked the 'cancel' button
-  cat("OK, you prefer to stay anonymous!\\n")
+  cat("OK, you prefer to stay anonymous!\n")
 } else {
-  cat("Hello", user, "\\n")
+  cat("Hello", user, "\n")
 }
 }
 }
 \seealso{
 \code{\link[=dlg_list]{dlg_list()}}, \code{\link[=dlg_form]{dlg_form()}}, \code{\link[=dlg_message]{dlg_message()}}
 }
-\concept{
-Modal dialog box
-}
+\concept{Modal dialog box}
 \keyword{misc}

@@ -16,7 +16,13 @@ dlgDir(default = getwd(), title, ..., gui = .GUI)
 
 \method{dlgDir}{textCLI}(default = getwd(), title, ..., gui = .GUI)
 
-\method{dlgDir}{nativeGUI}(default = getwd(), title, ..., gui = .GUI)
+\method{dlgDir}{nativeGUI}(
+  default = getwd(),
+  title,
+  rstudio = getOption("svDialogs.rstudio", TRUE),
+  ...,
+  gui = .GUI
+)
 }
 \arguments{
 \item{default}{The path to the default directory that is proposed (e.g.,
@@ -27,6 +33,11 @@ current working directory).}
 \item{...}{Pass further arguments to methods.}
 
 \item{gui}{The 'gui' object concerned by this dialog box.}
+
+\item{rstudio}{Logical. Should 'RStudio' dialog boxes automatically be used
+if available? If \code{FALSE}, force using OS dialog boxes, but only in
+'RStudio Desktop' (ignored in 'RStudio Server'). Can be changed globally
+with \code{options(svDialogs.rstudio = TRUE|FALSE)}. \code{TRUE} by default.}
 }
 \value{
 The modified 'gui' object is returned invisibly. Use its \code{gui$res}
@@ -45,7 +56,5 @@ setwd(dlg_dir(default = getwd())$res)
 \seealso{
 \code{\link[=dlg_open]{dlg_open()}}, \code{\link[=dlg_save]{dlg_save()}}
 }
-\concept{
-Modal dialog box
-}
+\concept{Modal dialog box}
 \keyword{misc}

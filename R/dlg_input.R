@@ -13,7 +13,7 @@
 #' @note The 'RStudio' version of this dialog box does not allow for an empty
 #' string. So, for better portability, try never to expect an empty string from
 #' the user (the `'Cancel'` button is there to dismiss the dialog box).
-#' On MacOS, single and double quotes are temporarilly replaced by their slanted
+#' On MacOS, single and double quotes are temporarily replaced by their slanted
 #' versions (unicode characters u3032 and u2033, respectively) because the
 #' command that triggers the dialog box does not allow quotes inside strings.
 #' Regular quotes are reset on the output. This is the only hack we found that
@@ -90,16 +90,16 @@ gui = .GUI) {
   invisible(gui)
 }
 
+#' @inheritParams get_system
 #' @export
 #' @rdname dlg_input
-dlgInput.nativeGUI <- function(message = "Enter a value", default = "", ...,
-gui = .GUI) {
+dlgInput.nativeGUI <- function(message = "Enter a value", default = "",
+rstudio = getOption("svDialogs.rstudio", TRUE), ..., gui = .GUI) {
   # The native version of the input box
   gui$setUI(widgets = "nativeGUI")
   # A simple text input box using native window
   # Return either a string, or character(0) if 'Cancel' clicked
-  if (.is_rstudio()) syst <- "RStudio" else syst <- Sys.info()["sysname"]
-  res <- switch(syst,
+  res <- switch(get_system(rstudio),
     RStudio = .rstudio_dlg_input(gui$args$message, gui$args$default),
     Windows = .win_dlg_input(gui$args$message, gui$args$default),
     Darwin = .mac_dlg_input(gui$args$message, gui$args$default),

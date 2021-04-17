@@ -9,18 +9,18 @@
 #' @param filters A specification of file filters as a `nx2` matrix, or a
 #' character string with even number of items. First items is the label, second
 #' one is the filter. See `dlg_filters` for examples. This is currently ignored
-#' on MacOS, since such kind of filter is defined differently there.
+#' on MacOS and RStudio, since such kind of filter is defined differently there.
 #' @param ... Pass further arguments to methods.
 #' @param gui The 'gui' object concerned by this dialog box.
 #' @return The modified 'gui' object is returned invisibly. The chosen file(s),
 #' or an empty string if the "cancel" button was clicked is found in `gui$res`
 #' (see example).
-#' @note On RStudio, `multiple = TRUE` cannot be honored. So, for now, you can
-#' only select one file there. Also, the textual version is painful to indicate
+#' @note On 'RStudio Server', `multiple = TRUE` cannot be honored for now. So,
+#' you can only select one file there, and a warning is issued to remind you
+#' that. On 'RStudio Desktop', the OS-native dialog box is used instead in case
+#' of `multiple = TRUE`. Also, the textual version is painful to indicate
 #' the full path of several files. So, it should use globbing, and/or indication
 #' of a path followed by a selection in a list (to be done in further versions).
-#' Finally, the 'RStudio' version of this dialog box currently ignores the
-#' `filters =` argument.
 #' @export
 #' @name dlg_open
 #' @seealso [dlg_save()], [dlg_dir()]
@@ -47,28 +47,30 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
   # To specify an initial dir, but no initial file, use /dir/*.*
 
   if (missing(default) || !length(default))
-    default <- character(0)
+    default <- ""
   if (!gui$startUI("dlg_open", call = match.call(), default = default,
     msg = "Displaying a modal open file dialog box",
     msg.no.ask = "A modal open file dialog box was by-passed"))
     return(invisible(gui))
 
   # Check and rework main arguments and place them in gui$args
-  if (missing(default) || !length(default))
-    default <- file.path(path.expand(getwd()), "*.*")
+  #if (missing(default) || !length(default))
+  #  default <- file.path(path.expand(getwd()), "*.*")
   default <- as.character(default)[1]
   # Under Windows, it uses \\ as separator, although .Platform$file.sep
   # is now / (tested in R 2.11.1) => replace it
   if (.Platform$OS.type == "windows")
     default <- gsub("\\\\", "/", default)
   # Check that dir and file already exists
-  dir <- dirname(default)
-  if (!file.exists(dir) || !file.info(dir)$isdir)
-    default <- file.path(getwd(), basename(default))
+
+  # No, we don't check!
+  #dir <- dirname(default)
+  #if (!file.exists(dir) || !file.info(dir)$isdir)
+  #  default <- file.path(getwd(), basename(default))
   # Check that file exists
-  file <- basename(default)
-  if (file != "*.*" && file != "*" && !file.exists(default))
-    default <- file.path(dirname(default), "*.*")
+  #file <- basename(default)
+  #if (file != "*.*" && file != "*" && !file.exists(default))
+  #  default <- file.path(dirname(default), "*.*")
   multiple <- isTRUE(as.logical(multiple))
   if (missing(title) || !length(title) || title == "") {
     if (multiple) {
@@ -186,10 +188,12 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
   invisible(gui)
 }
 
+#' @inheritParams get_system
 #' @export
 #' @rdname dlg_open
 dlgOpen.nativeGUI <- function(default, title, multiple = FALSE,
-filters = dlg_filters["All", ], ..., gui = .GUI) {
+filters = dlg_filters["All", ], rstudio = getOption("svDialogs.rstudio", TRUE),
+..., gui = .GUI) {
   # The native version of the file open box
   gui$setUI(widgets = "nativeGUI")
   # An 'open file' dialog box
@@ -197,8 +201,7 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
   # This dialog box is always modal
   #
   # Replacement for choose.files(), tkgetOpenFile() & file.choose(new=FALSE)
-  if (.is_rstudio()) syst <- "RStudio" else syst <- Sys.info()["sysname"]
-  res <- switch(syst,
+  res <- switch(get_system(rstudio),
     RStudio = .rstudio_dlg_open(gui$args$default, gui$args$title,
       gui$args$multiple, gui$args$filters),
     Windows = .win_dlg_open(gui$args$default, gui$args$title,
@@ -223,12 +226,27 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
   filters = dlg_filters["All", ]) {
   if (rstudioapi::getVersion() < '1.1.287')
     return(NULL)
-  if (multiple == TRUE)
-    warning("RStudio currently does not allow multiple files selection!")
-  # I cannot manage to understand how filter is used by selectFile(). So, I
-  # prefer **not** to use it for now!
-  res <- rstudioapi::selectFile(caption = title, path = default,
-      label = "Open", existing = TRUE)
+  if (multiple == TRUE) {
+    if (.is_rstudio_desktop()) {
+      # We use the OS native dialog box instead (temporary workaround)
+      # TODO: consider using tcltk::tk_choose.files(multi = TRUE), at least on
+      # MacOS because of the 'Terminal activation bug', but need to make sure
+      # tcltk is available => more complex than just calling the function!
+      res <- switch(get_system(rstudio = FALSE),
+        Windows = .win_dlg_open(default, title, multiple, filters),
+        Darwin = .mac_dlg_open(default, title, multiple, filters),
+        .unix_dlg_open(default, title, multiple, filters)
+      )
+    } else {# RStudio Server
+      warning(
+        "RStudio Server currently does not allow multiple files selection!")
+      res <- rstudioapi::selectFile(caption = title, path = default,
+        label = "Open", existing = TRUE)
+    }
+  } else {# Single file
+    res <- rstudioapi::selectFile(caption = title, path = default,
+      label = "Open", existing = TRUE, filter = filters)
+  }
   if (is.null(res) || res == "") {
     res <- character(0)
   } else{

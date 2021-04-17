@@ -3,7 +3,7 @@
 #' A message box with icon, text, and one to three buttons.
 #'
 #' @param message The message to display in the dialog box. Use `\\n` for line
-#' break, or provide a vector of character strings, one for each line.
+#' break, or provide a vector of character strings, one for each line (except under RStudio where it is not possible to force line break inside the message string).
 #' @param type The type of dialog box: `'ok'`, `'okcancel'`, `'yesno'` or
 #' `'yesnocancel'`.
 #' @param ... Pass further arguments to methods.
@@ -127,18 +127,19 @@ dlgMessage.textCLI <- function(message, type = c("ok", "okcancel", "yesno",
   invisible(gui)
 }
 
+#' @inheritParams get_system
 #' @export
 #' @rdname dlg_message
 dlgMessage.nativeGUI <- function(message, type = c("ok", "okcancel", "yesno",
-"yesnocancel"), ..., gui = .GUI) {
+"yesnocancel"), rstudio = getOption("svDialogs.rstudio", TRUE), ...,
+gui = .GUI) {
   # The native version of the message box
   gui$setUI(widgets = "nativeGUI")
   # A simple message box
   # type can be 'ok' (info), 'okcancel', 'yesno', 'yesnocancel' (question)
   # This dialog box is always modal
   # Returns invisibly a character with the button that was pressed
-  if (.is_rstudio()) syst <- "RStudio" else syst <- Sys.info()["sysname"]
-  res <- switch(syst,
+  res <- switch(get_system(rstudio),
     RStudio = .rstudio_dlg_message(gui$args$message, gui$args$type),
     Windows = .win_dlg_message(gui$args$message, gui$args$type),
     Darwin = .mac_dlg_message(gui$args$message, gui$args$type),

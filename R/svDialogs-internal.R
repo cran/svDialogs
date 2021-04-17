@@ -24,6 +24,8 @@
 
 .is_rstudio <- function() rstudioapi::isAvailable()
 
+.is_rstudio_desktop <- function() rstudioapi::versionInfo()$mode == "desktop"
+
 # With yad or zenity, I cannot have double quotes inside strings: escape them
 .escape_quotes <- function(str) {
   # For yad messages, we need to escape double quotes **inside** messages
@@ -31,7 +33,7 @@
 }
 
 # With MacOS, I cannot escape quotes: it does not work with dlg commands
-# So, I temporarilly replace them: U+2032 instead of ' and U+2033 for "
+# So, I temporarily replace them: U+2032 instead of ' and U+2033 for "
 .replace_quotes <- function(str) {
   # Need to force toward UTF8
   str <- enc2utf8(str)

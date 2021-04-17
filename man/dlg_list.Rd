@@ -8,20 +8,51 @@
 \alias{dlgList.nativeGUI}
 \title{Modal dialog to select one or more items in a list.}
 \usage{
-dlg_list(choices, preselect = NULL, multiple = FALSE, title = NULL, ...,
-  gui = .GUI)
+dlg_list(
+  choices,
+  preselect = NULL,
+  multiple = FALSE,
+  title = NULL,
+  ...,
+  gui = .GUI
+)
 
-dlgList(choices, preselect = NULL, multiple = FALSE, title = NULL, ...,
-  gui = .GUI)
+dlgList(
+  choices,
+  preselect = NULL,
+  multiple = FALSE,
+  title = NULL,
+  ...,
+  gui = .GUI
+)
 
-\method{dlgList}{gui}(choices, preselect = NULL, multiple = FALSE,
-  title = NULL, ..., gui = .GUI)
+\method{dlgList}{gui}(
+  choices,
+  preselect = NULL,
+  multiple = FALSE,
+  title = NULL,
+  ...,
+  gui = .GUI
+)
 
-\method{dlgList}{textCLI}(choices, preselect = NULL, multiple = FALSE,
-  title = NULL, ..., gui = .GUI)
+\method{dlgList}{textCLI}(
+  choices,
+  preselect = NULL,
+  multiple = FALSE,
+  title = NULL,
+  ...,
+  gui = .GUI
+)
 
-\method{dlgList}{nativeGUI}(choices, preselect = NULL, multiple = FALSE,
-  title = NULL, ..., gui = .GUI)
+\method{dlgList}{nativeGUI}(
+  choices,
+  preselect = NULL,
+  multiple = FALSE,
+  title = NULL,
+  rstudio = getOption("svDialogs.rstudio", TRUE),
+  ...,
+  gui = .GUI
+)
 }
 \arguments{
 \item{choices}{The list of items. It is coerced to character strings.}
@@ -38,6 +69,11 @@ instead.}
 \item{...}{Pass further arguments to methods.}
 
 \item{gui}{The 'gui' object concerned by this dialog box.}
+
+\item{rstudio}{Logical. Should 'RStudio' dialog boxes automatically be used
+if available? If \code{FALSE}, force using OS dialog boxes, but only in
+'RStudio Desktop' (ignored in 'RStudio Server'). Can be changed globally
+with \code{options(svDialogs.rstudio = TRUE|FALSE)}. \code{TRUE} by default.}
 }
 \value{
 The modified 'gui' object is returned invisibly. A list with selected
@@ -50,27 +86,28 @@ list.
 }
 \note{
 RStudio does not provide (yet) a graphical list selector (as of version
-1.1.447). Consequently, a textual version at the R Console is used even in
-the case of \code{'nativeGUI'} as a temporary workaround (should be implemented in
+1.1.447). Consequently, a Tk version is used (if 'tcltk' is available) for
+'RStudio Desktop' and a textual version at the R Console is used in the other
+cases, for \code{'nativeGUI'} as a temporary workaround (should be implemented in
 Shiny later on). Also note that the textual version only reports preselection
 when \code{multiple == TRUE}, and they are not used automatically if you do not
 respecify them in your feedback (limitation of
 \code{utils::select.list(graphics = FALSE)}).
-On MacOS, and outside of R(64.app) which has his own list selection dialog
-box, single and double quotes are temporarilly replaced by their slanted
+On MacOS, and outside of R(64).app, which has his own list selection dialog
+box, single and double quotes are temporarily replaced by their slanted
 versions (unicode characters u3032 and u2033, respectively) because the
 command that triggers the dialog box does not allow quotes inside strings.
 Regular quotes are reset on the output. This is the only hack we found that
-was working. Better solutions are welcome!
+was working. Better solutions are welcome, of course!
 }
 \examples{
 \dontrun{
 # Select one or several months
 res <- dlg_list(month.name, multiple = TRUE)$res
 if (!length(res)) {
-  cat("You cancelled the choice\\n")
+  cat("You cancelled the choice\n")
 } else {
-  cat("You selected:\\n")
+  cat("You selected:\n")
   print(res)
 }
 }
@@ -78,7 +115,5 @@ if (!length(res)) {
 \seealso{
 \code{\link[=dlg_form]{dlg_form()}}, \code{\link[=dlg_input]{dlg_input()}}
 }
-\concept{
-Modal dialog box
-}
+\concept{Modal dialog box}
 \keyword{misc}
