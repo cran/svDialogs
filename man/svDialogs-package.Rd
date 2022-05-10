@@ -4,7 +4,7 @@
 \name{svDialogs-package}
 \alias{svDialogs}
 \alias{svDialogs-package}
-\title{svDialogs: SciViews - Standard Dialog Boxes for Windows, MacOS and Linuxes}
+\title{svDialogs: 'SciViews' - Standard Dialog Boxes for Windows, MacOS and Linuxes}
 \description{
 Quickly construct standard dialog boxes for your GUI, including 
   message boxes, input boxes, list, file or directory selection, ... In case R

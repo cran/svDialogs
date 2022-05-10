@@ -12,9 +12,32 @@
 
 <meta name="author" content="Philippe Grosjean(phgrosjean@sciviews.org)" />
 
-<meta name="date" content="2021-04-16" />
+<meta name="date" content="2022-05-10" />
 
 <title>svDialogs - Standard dialog boxes for everybody</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 
@@ -213,14 +236,20 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">svDialogs - Standard dialog boxes for everybody</h1>
+<h1 class="title toc-ignore">svDialogs - Standard dialog boxes for
+everybody</h1>
 <h4 class="author">Philippe Grosjean(<a href="mailto:phgrosjean@sciviews.org" class="email">phgrosjean@sciviews.org</a>)</h4>
-<h4 class="date">2021-04-16</h4>
+<h4 class="date">2022-05-10</h4>
 
 
 
-<p>Simple modal dialog boxes are available in R, but they are not implemented on all platforms the same way. In {svDialogs}, we provide functions that operate consistently through all the platforms supported by R, and a fallback mechanisms is also implemented in case no GUI is available (question or menu selection in a textual terminal window).</p>
-<p><strong>TODO: explain the bases of {svDialogs} boxes here…</strong></p>
+<p>Simple modal dialog boxes are available in R, but they are not
+implemented on all platforms the same way. In {svDialogs}, we provide
+functions that operate consistently through all the platforms supported
+by R, and a fallback mechanisms is also implemented in case no GUI is
+available (question or menu selection in a textual terminal window).</p>
+<p><strong>TODO: explain the bases of {svDialogs} boxes
+here…</strong></p>
 
 
 

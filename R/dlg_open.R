@@ -33,8 +33,9 @@
 #' # Choose several files
 #' dlg_open(multiple = TRUE)$res
 #' }
-dlg_open <- function(default, title, multiple = FALSE,
-filters = dlg_filters["All", ], ..., gui = .GUI) {
+dlg_open <- function(default = "", title = if (multiple) "Select files" else
+"Select file", multiple = FALSE, filters = dlg_filters["All", ], ...,
+gui = .GUI) {
   # Define the S3 method
   # An 'open file(s)' dialog box
   # filters is a n x 2 matrix of characters with description and filter
@@ -46,8 +47,6 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
   # always the first filter that is selected by default in the dialog box
   # To specify an initial dir, but no initial file, use /dir/*.*
 
-  if (missing(default) || !length(default))
-    default <- ""
   if (!gui$startUI("dlg_open", call = match.call(), default = default,
     msg = "Displaying a modal open file dialog box",
     msg.no.ask = "A modal open file dialog box was by-passed"))
@@ -72,13 +71,7 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
   #if (file != "*.*" && file != "*" && !file.exists(default))
   #  default <- file.path(dirname(default), "*.*")
   multiple <- isTRUE(as.logical(multiple))
-  if (missing(title) || !length(title) || title == "") {
-    if (multiple) {
-      title <- "Select files"
-    } else {
-      title <- "Select file"
-    }
-  } else title <- as.character(title)[1]
+  title <- as.character(title)[1]
   # Check that filter is a nx2 character matrix, or try reshape it as such
   if (is.matrix(filters)) {
     if (ncol(filters) != 2 || !is.character(filters))
@@ -92,7 +85,7 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
     multiple = multiple, filters = filters))
 
   # ... and dispatch to the method
-  UseMethod("dlgOpen", gui)
+  UseMethod("dlg_open", gui)
 }
 
 #' @export
@@ -103,7 +96,7 @@ dlgOpen <- dlg_open # Backward compatibility
 #' @rdname dlg_open
 # Default filters for dlg_open() and dlg_save() boxes
 dlg_filters <- matrix(c(
-  "R or S files (*.R,*.q,*.ssc,*.S)", "*.R;*.q;*.ssc;*.S",
+  "R files (*.R)", "*.R",
   "Enhanced metafiles (*.emf)","*.emf",
   "Postscript files (*.ps)", "*.ps",
   "PDF files (*.pdf)", "*.pdf",
@@ -112,11 +105,23 @@ dlg_filters <- matrix(c(
   "Jpeg files (*.jpeg,*.jpg)", "*.jpeg;*.jpg",
   "Text files (*.txt)", "*.txt",
   "R images (*.RData,*.rda)", "*.RData;*.rda",
+  "R objects (*.rds)", "*.rds",
+  "R Markdown (*.Rmd)", "*.Rmd",
+  "Markdown (*.md)", "*.md",
+  "LaTeX files (*.tex)", "*.tex",
+  "CSV files (*.csv)", "*.csv",
+  "TSV files (*.tsv)", "*.tsv",
+  "Excel files (*.xlsx,*.xls)", "*.xlsx;*.xls",
+  "C files (*.c)", "*.c",
+  "Python files (*.py)", "*.py",
+  "YAML files (*.yml)", "*.yml",
   "Zip files (*.zip)", "*.zip",
+  "Tar-gz files (*.tar.gz)", "*.tar.gz",
   "All files (*.*)", "*.*" ), ncol = 2, byrow = TRUE)
 
 rownames(dlg_filters) <- c("R", "emf", "ps", "pdf", "png", "bmp", "jpeg",
-  "txt", "RData", "zip", "All")
+  "txt", "RData", "rds", "Rmd", "md", "tex", "csv", "tsv", "xls", "c", "py",
+  "yaml", "zip", "tar.gz", "All")
 
 #' @export
 #' @rdname dlg_open
@@ -124,7 +129,7 @@ dlgFilters <- dlg_filters # Backward compatibility
 
 #' @export
 #' @rdname dlg_open
-dlgOpen.gui <- function(default, title, multiple = FALSE,
+dlg_open.gui <- function(default, title, multiple = FALSE,
 filters = dlg_filters["All", ], ..., gui = .GUI) {
   # Used to break the chain of NextMethod(), searching for an usable method
   # in the current context
@@ -137,7 +142,7 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
 
 #' @export
 #' @rdname dlg_open
-dlgOpen.textCLI <- function(default, title, multiple = FALSE,
+dlg_open.textCLI <- function(default, title, multiple = FALSE,
 filters = dlg_filters["All", ], ..., gui = .GUI) {
   # The pure textual version used as fallback in case no GUI could be used
   # TODO: there is a problem with /dir/*.* => return => use it as a default
@@ -191,7 +196,7 @@ filters = dlg_filters["All", ], ..., gui = .GUI) {
 #' @inheritParams get_system
 #' @export
 #' @rdname dlg_open
-dlgOpen.nativeGUI <- function(default, title, multiple = FALSE,
+dlg_open.nativeGUI <- function(default, title, multiple = FALSE,
 filters = dlg_filters["All", ], rstudio = getOption("svDialogs.rstudio", TRUE),
 ..., gui = .GUI) {
   # The native version of the file open box
@@ -214,7 +219,7 @@ filters = dlg_filters["All", ], rstudio = getOption("svDialogs.rstudio", TRUE),
 
   # Do we need to further dispatch?
   if (is.null(res)) {
-    NextMethod("dlgOpen", gui)
+    NextMethod("dlg_open", gui)
   } else {
     gui$setUI(res = res, status = NULL)
     invisible(gui)
@@ -245,7 +250,7 @@ filters = dlg_filters["All", ], rstudio = getOption("svDialogs.rstudio", TRUE),
     }
   } else {# Single file
     res <- rstudioapi::selectFile(caption = title, path = default,
-      label = "Open", existing = TRUE, filter = filters)
+      label = "Open", existing = TRUE) #, filter = filters) # Does not work: filters are specified differently in RStudio!
   }
   if (is.null(res) || res == "") {
     res <- character(0)

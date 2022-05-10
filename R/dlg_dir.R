@@ -20,7 +20,8 @@
 #' # A quick default directory changer
 #' setwd(dlg_dir(default = getwd())$res)
 #' }
-dlg_dir <- function(default = getwd(), title, ..., gui = .GUI) {
+dlg_dir <- function(default = getwd(), title = "Choose a directory", ...,
+gui = .GUI) {
   # Define the S3 method
   if (!gui$startUI("dlg_dir", call = match.call(), default = default,
     msg = "Displaying a modal dir selection dialog box",
@@ -37,15 +38,11 @@ dlg_dir <- function(default = getwd(), title, ..., gui = .GUI) {
     # is now / (tested in R 2.11.1) => replace it
     if (.Platform$OS.type == "windows")
       default <- gsub("\\\\", "/", default)
-    if (missing(title) || !length(title) || title == "") {
-      title <- "Choose a directory"
-    } else {
-      title <- paste(as.character(title), collapse = "\n")
-    }
+    title <- paste(as.character(title), collapse = "\n")
     gui$setUI(args = list(default = default, title = title))
 
     # ... and dispatch to the method
-    UseMethod("dlgDir", gui)
+    UseMethod("dlg_dir", gui)
 }
 
 #' @export
@@ -54,7 +51,7 @@ dlgDir <- dlg_dir # Backward compatibility
 
 #' @export
 #' @rdname dlg_dir
-dlgDir.gui <- function(default = getwd(), title, ..., gui = .GUI) {
+dlg_dir.gui <- function(default = getwd(), title, ..., gui = .GUI) {
   # Used to break the chain of NextMethod(), searching for a usable method
   # in the current context
   msg <- paste("No workable method available to display",
@@ -66,7 +63,7 @@ dlgDir.gui <- function(default = getwd(), title, ..., gui = .GUI) {
 
 #' @export
 #' @rdname dlg_dir
-dlgDir.textCLI <- function(default = getwd(), title, ..., gui = .GUI) {
+dlg_dir.textCLI <- function(default = getwd(), title, ..., gui = .GUI) {
   # The pure textual version used a fallback in case no GUI could be used
   gui$setUI(widgets = "textCLI")
   # Ask for the directory
@@ -107,7 +104,7 @@ dlgDir.textCLI <- function(default = getwd(), title, ..., gui = .GUI) {
 #' @inheritParams get_system
 #' @export
 #' @rdname dlg_dir
-dlgDir.nativeGUI <- function(default = getwd(), title,
+dlg_dir.nativeGUI <- function(default = getwd(), title,
 rstudio = getOption("svDialogs.rstudio", TRUE), ..., gui = .GUI) {
   # The native version of the dir select box
   gui$setUI(widgets = "nativeGUI")
@@ -124,7 +121,7 @@ rstudio = getOption("svDialogs.rstudio", TRUE), ..., gui = .GUI) {
   )
 
   # Do we need to further dispatch?
-  if (is.null(res)) NextMethod("dlgDir", gui) else {
+  if (is.null(res)) NextMethod("dlg_dir", gui) else {
     gui$setUI(res = res, status = NULL)
     invisible(gui)
   }

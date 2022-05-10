@@ -6,19 +6,19 @@
 \alias{dlgOpen}
 \alias{dlg_filters}
 \alias{dlgFilters}
-\alias{dlgOpen.gui}
-\alias{dlgOpen.textCLI}
-\alias{dlgOpen.nativeGUI}
+\alias{dlg_open.gui}
+\alias{dlg_open.textCLI}
+\alias{dlg_open.nativeGUI}
 \title{Modal dialog to select a file.}
 \format{
-An object of class \code{matrix} with 11 rows and 2 columns.
+An object of class \code{matrix} (inherits from \code{array}) with 22 rows and 2 columns.
 
-An object of class \code{matrix} with 11 rows and 2 columns.
+An object of class \code{matrix} (inherits from \code{array}) with 22 rows and 2 columns.
 }
 \usage{
 dlg_open(
-  default,
-  title,
+  default = "",
+  title = if (multiple) "Select files" else "Select file",
   multiple = FALSE,
   filters = dlg_filters["All", ],
   ...,
@@ -26,8 +26,8 @@ dlg_open(
 )
 
 dlgOpen(
-  default,
-  title,
+  default = "",
+  title = if (multiple) "Select files" else "Select file",
   multiple = FALSE,
   filters = dlg_filters["All", ],
   ...,
@@ -38,7 +38,7 @@ dlg_filters
 
 dlgFilters
 
-\method{dlgOpen}{gui}(
+\method{dlg_open}{gui}(
   default,
   title,
   multiple = FALSE,
@@ -47,7 +47,7 @@ dlgFilters
   gui = .GUI
 )
 
-\method{dlgOpen}{textCLI}(
+\method{dlg_open}{textCLI}(
   default,
   title,
   multiple = FALSE,
@@ -56,7 +56,7 @@ dlgFilters
   gui = .GUI
 )
 
-\method{dlgOpen}{nativeGUI}(
+\method{dlg_open}{nativeGUI}(
   default,
   title,
   multiple = FALSE,
